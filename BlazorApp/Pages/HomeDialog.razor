@@ -1,0 +1,51 @@
+﻿@implements IDialogContentComponent<HomeDialog.EditModel>
+@implements IDisposable
+
+<EditForm EditContext="EditContext">
+    <FluentTextField @bind-Value=Content.Name />
+</EditForm>
+
+@code
+{
+    [Parameter] public EditModel Content { get; set; } = null!;
+
+    EditContext EditContext { get; set; } = null!;
+
+    Timer? _timer;
+
+    protected override void OnInitialized()
+    {
+        EditContext = new(Content);
+
+        _timer = new Timer(UpdateContent, null, TimeSpan.FromSeconds(3), Timeout.InfiniteTimeSpan);
+
+        base.OnInitialized();
+    }
+
+    void UpdateContent(object? state)
+    {
+        InvokeAsync(() =>
+        {
+            Content = new()
+            {
+                Name = "---------------"
+            };
+
+            EditContext = new(Content);
+
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+
+    //--
+
+    public class EditModel
+    {
+        public string Name { get; set; } = null!;
+    }
+}

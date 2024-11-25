@@ -1,0 +1,36 @@
+﻿@page "/"
+@inject IDialogService DialogService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new Fluent Blazor app.
+
+<div>
+    <FluentButton Appearance="Appearance.Accent" OnClick="OpenDialogPanel">
+        Open Dialog Panel
+    </FluentButton>
+</div>
+
+@code
+{
+    async Task OpenDialogPanel()
+    {
+        var data = new HomeDialog.EditModel
+        {
+            Name = "+++++++++++++++"
+        };
+
+        var dialog = await DialogService.ShowPanelAsync<HomeDialog>(data, new()
+        {
+            PrimaryAction = null,
+            SecondaryAction = null,
+            PreventDismissOnOverlayClick = true,
+            PreventScroll = true,
+            TrapFocus = false
+        });
+
+        var result = await dialog.Result;
+    }
+}
